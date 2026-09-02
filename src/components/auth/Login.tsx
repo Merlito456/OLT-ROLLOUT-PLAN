@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { useAuth } from '../../hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
-import logoNokia from '../../../public/logo-nokia.png';
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -30,9 +29,24 @@ const Login: React.FC = () => {
     <div className="login-page">
       <div className="login-container">
         <div className="login-header">
-          <img src={logoNokia} alt="Nokia" className="login-logo" />
-          <h1>Nokia Rollout Management</h1>
-          <p>Project Rollout and Activity Management System</p>
+          {/* Text-based logo instead of image */}
+          <div className="logo-text" style={{ marginBottom: '1rem' }}>
+            <h1 style={{ 
+              color: '#005AFF', 
+              fontSize: '2.5rem', 
+              margin: 0,
+              fontWeight: 'bold',
+              letterSpacing: '2px'
+            }}>NOKIA</h1>
+            <p style={{ 
+              color: '#6B7280', 
+              fontSize: '0.9rem', 
+              margin: 0,
+              fontWeight: '500'
+            }}>Rollout Management</p>
+          </div>
+          <h1 style={{ fontSize: '1.5rem', marginBottom: '0.5rem' }}>Nokia Rollout Management</h1>
+          <p style={{ color: '#6B7280' }}>Project Rollout and Activity Management System</p>
         </div>
 
         <form onSubmit={handleSubmit} className="login-form">
