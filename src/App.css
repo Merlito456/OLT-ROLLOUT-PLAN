@@ -1,56 +1,73 @@
 /* src/App.css */
 
-/* Nokia Telecom Colors */
+/* Nokia Telecom Theme Colors */
 :root {
+    /* Primary Colors */
     --nokia-blue: #005AFF;
-    --nokia-dark-blue: #0038A8;
-    --nokia-light-blue: #E8F1FF;
+    --nokia-blue-dark: #0038A8;
+    --nokia-blue-light: #E8F1FF;
+    --nokia-blue-gradient: linear-gradient(135deg, #005AFF 0%, #0038A8 100%);
+    
+    /* Secondary Colors */
     --nokia-teal: #00B4A0;
+    --nokia-teal-light: #E6F9F6;
     --nokia-orange: #FF6B00;
+    --nokia-orange-light: #FFF0E6;
+    
+    /* Neutral Colors */
     --nokia-dark: #1A1A2E;
+    --nokia-dark-gray: #2D2D44;
     --nokia-gray: #6B7280;
+    --nokia-gray-light: #9CA3AF;
     --nokia-light-gray: #F3F4F6;
     --nokia-white: #FFFFFF;
+    
+    /* Status Colors */
     --nokia-success: #10B981;
+    --nokia-success-light: #D1FAE5;
     --nokia-warning: #F59E0B;
+    --nokia-warning-light: #FEF3C7;
     --nokia-danger: #EF4444;
+    --nokia-danger-light: #FEE2E2;
+    --nokia-info: #3B82F6;
+    --nokia-info-light: #DBEAFE;
+    
+    /* Shadows */
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.15);
+    --shadow-nokia: 0 4px 20px rgba(0, 90, 255, 0.15);
+    
+    /* Borders */
+    --border-radius-sm: 6px;
+    --border-radius-md: 10px;
+    --border-radius-lg: 16px;
+    --border-radius-xl: 24px;
+    
+    /* Transitions */
+    --transition-fast: 150ms ease;
+    --transition-base: 300ms ease;
+    --transition-slow: 500ms ease;
 }
 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
+/* Update body background */
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: var(--nokia-light-gray);
+    background: #F8FAFC;
     color: var(--nokia-dark);
 }
 
-/* Navigation */
+/* Update Navigation */
 .nokia-nav {
     background: var(--nokia-dark);
-    color: var(--nokia-white);
+    background: var(--nokia-blue-gradient);
     padding: 1rem 2rem;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    box-shadow: var(--shadow-lg);
     position: sticky;
     top: 0;
     z-index: 1000;
-}
-
-.nav-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    max-width: 1400px;
-    margin: 0 auto;
-}
-
-.nav-brand {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
+    border-bottom: 3px solid var(--nokia-teal);
 }
 
 .nav-logo {
@@ -61,96 +78,50 @@ body {
 .brand-text {
     font-size: 1.5rem;
     font-weight: 700;
-    background: linear-gradient(135deg, var(--nokia-blue), var(--nokia-teal));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-}
-
-.nav-menu {
-    display: flex;
-    list-style: none;
-    gap: 1.5rem;
-    align-items: center;
-    flex-wrap: wrap;
+    color: var(--nokia-white);
+    letter-spacing: 0.5px;
 }
 
 .nav-menu a {
-    color: var(--nokia-white);
+    color: rgba(255, 255, 255, 0.8);
     text-decoration: none;
     font-weight: 500;
     padding: 0.5rem 1rem;
-    border-radius: 6px;
-    transition: all 0.3s ease;
+    border-radius: var(--border-radius-sm);
+    transition: all var(--transition-base);
 }
 
 .nav-menu a:hover {
-    background: rgba(255, 255, 255, 0.1);
-}
-
-.nav-menu a.active {
-    background: var(--nokia-blue);
+    background: rgba(255, 255, 255, 0.15);
     color: var(--nokia-white);
 }
 
-.logout-btn {
-    background: var(--nokia-danger);
-    color: white;
-    border: none;
-    padding: 0.5rem 1.5rem;
-    border-radius: 6px;
-    cursor: pointer;
-    font-weight: 600;
-    transition: all 0.3s ease;
+.nav-menu a.active {
+    background: var(--nokia-teal);
+    color: var(--nokia-white);
+    box-shadow: var(--shadow-md);
 }
 
-.logout-btn:hover {
-    background: #DC2626;
-    transform: translateY(-1px);
-}
-
-/* Dashboard */
-.dashboard {
-    padding: 2rem;
-    max-width: 1400px;
-    margin: 0 auto;
-}
-
-.dashboard-header {
-    margin-bottom: 2rem;
-}
-
-.dashboard-header h1 {
-    font-size: 2.5rem;
-    font-weight: 700;
-    color: var(--nokia-dark);
-    margin-bottom: 1.5rem;
-}
-
-.stats-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 1.5rem;
-}
-
+/* Update Stat Cards */
 .stat-card {
     background: var(--nokia-white);
     padding: 1.5rem;
-    border-radius: 12px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease;
+    border-radius: var(--border-radius-md);
+    box-shadow: var(--shadow-sm);
+    transition: all var(--transition-base);
+    border-left: 4px solid var(--nokia-blue);
 }
 
 .stat-card:hover {
     transform: translateY(-4px);
+    box-shadow: var(--shadow-nokia);
 }
 
-.stat-card h3 {
-    font-size: 0.875rem;
-    color: var(--nokia-gray);
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
+.stat-card:nth-child(2) { border-left-color: var(--nokia-teal); }
+.stat-card:nth-child(3) { border-left-color: var(--nokia-orange); }
+.stat-card:nth-child(4) { border-left-color: var(--nokia-warning); }
+.stat-card:nth-child(5) { border-left-color: var(--nokia-info); }
+.stat-card:nth-child(6) { border-left-color: var(--nokia-success); }
 
 .stat-number {
     font-size: 2rem;
@@ -159,6 +130,103 @@ body {
     margin-top: 0.5rem;
 }
 
+/* Update Buttons */
+.btn-primary {
+    background: var(--nokia-blue-gradient);
+    color: var(--nokia-white);
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: var(--border-radius-sm);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all var(--transition-base);
+    box-shadow: var(--shadow-sm);
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-nokia);
+}
+
+.btn-primary:active {
+    transform: translateY(0);
+}
+
+.btn-secondary {
+    background: var(--nokia-teal);
+    color: var(--nokia-white);
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: var(--border-radius-sm);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all var(--transition-base);
+}
+
+.btn-secondary:hover {
+    background: #009B8A;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 180, 160, 0.3);
+}
+
+/* Update Tables */
+.site-table thead {
+    background: var(--nokia-blue-light);
+    border-bottom: 2px solid var(--nokia-blue);
+}
+
+.site-table th {
+    color: var(--nokia-blue-dark);
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 0.5px;
+}
+
+.site-table tr:hover {
+    background: var(--nokia-blue-light);
+}
+
+/* Update Login Page */
+.login-page {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--nokia-blue-gradient);
+    padding: 2rem;
+}
+
+.login-container {
+    background: var(--nokia-white);
+    border-radius: var(--border-radius-xl);
+    padding: 3rem;
+    max-width: 450px;
+    width: 100%;
+    box-shadow: var(--shadow-xl);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.login-logo {
+    height: 60px;
+    margin-bottom: 1rem;
+}
+
+.login-header h1 {
+    color: var(--nokia-dark);
+    font-size: 1.75rem;
+}
+
+.login-header p {
+    color: var(--nokia-gray);
+}
+
+.login-form .form-group input:focus {
+    border-color: var(--nokia-blue);
+    box-shadow: 0 0 0 3px rgba(0, 90, 255, 0.1);
+}
+
+/* Update Dashboard Content */
 .dashboard-content {
     display: grid;
     grid-template-columns: 2fr 1fr;
@@ -166,158 +234,118 @@ body {
     margin-top: 2rem;
 }
 
-/* Buttons */
-.btn-primary {
-    background: var(--nokia-blue);
-    color: white;
-    border: none;
-    padding: 0.75rem 1.5rem;
-    border-radius: 8px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.btn-primary:hover {
-    background: var(--nokia-dark-blue);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 90, 255, 0.3);
-}
-
-.btn-view {
-    background: var(--nokia-light-blue);
-    color: var(--nokia-blue);
-    padding: 0.25rem 0.75rem;
-    border-radius: 4px;
-    text-decoration: none;
-    font-size: 0.875rem;
-}
-
-/* Tables */
-.table-container {
+.chart-section {
     background: var(--nokia-white);
-    border-radius: 12px;
-    overflow: hidden;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    padding: 1.5rem;
+    border-radius: var(--border-radius-md);
+    box-shadow: var(--shadow-sm);
 }
 
-.site-table {
-    width: 100%;
-    border-collapse: collapse;
+.notification-section {
+    background: var(--nokia-white);
+    padding: 1.5rem;
+    border-radius: var(--border-radius-md);
+    box-shadow: var(--shadow-sm);
 }
 
-.site-table thead {
-    background: var(--nokia-light-blue);
+/* Update About Page */
+.about-card {
+    background: var(--nokia-white);
+    padding: 2rem;
+    border-radius: var(--border-radius-md);
+    box-shadow: var(--shadow-sm);
+    border-top: 4px solid var(--nokia-blue);
+    transition: all var(--transition-base);
 }
 
-.site-table th {
-    padding: 1rem;
-    text-align: left;
-    font-weight: 600;
-    color: var(--nokia-dark);
-    border-bottom: 2px solid var(--nokia-blue);
+.about-card:hover {
+    box-shadow: var(--shadow-nokia);
 }
 
-.site-table td {
-    padding: 1rem;
-    border-bottom: 1px solid var(--nokia-light-gray);
+.about-card:nth-child(2) { border-top-color: var(--nokia-teal); }
+.about-card:nth-child(3) { border-top-color: var(--nokia-orange); }
+.about-card:nth-child(4) { border-top-color: var(--nokia-info); }
+
+.about-card h2 {
+    color: var(--nokia-blue-dark);
 }
 
-.site-table tr:hover {
-    background: var(--nokia-light-gray);
+.developer-info {
+    background: var(--nokia-blue-light);
+    padding: 2rem;
+    border-radius: var(--border-radius-md);
+    grid-column: 1 / -1;
+    text-align: center;
+    border: 2px solid var(--nokia-blue);
 }
 
-/* Forms */
-.form-group {
-    margin-bottom: 1.5rem;
-}
-
-.form-group label {
-    display: block;
-    font-weight: 600;
-    margin-bottom: 0.5rem;
-    color: var(--nokia-dark);
-}
-
+/* Update Form Elements */
 .form-group input,
 .form-group select,
 .form-group textarea {
-    width: 100%;
-    padding: 0.75rem;
     border: 2px solid var(--nokia-light-gray);
-    border-radius: 8px;
-    font-size: 1rem;
-    transition: border-color 0.3s ease;
+    border-radius: var(--border-radius-sm);
+    transition: all var(--transition-base);
 }
 
 .form-group input:focus,
 .form-group select:focus,
 .form-group textarea:focus {
-    outline: none;
     border-color: var(--nokia-blue);
+    box-shadow: 0 0 0 3px rgba(0, 90, 255, 0.1);
 }
 
-/* About Page */
-.about-page {
-    padding: 2rem;
-    max-width: 1400px;
-    margin: 0 auto;
-}
-
-.about-header {
-    text-align: center;
-    margin-bottom: 3rem;
-}
-
-.about-header h1 {
-    font-size: 3rem;
-    font-weight: 700;
-    background: linear-gradient(135deg, var(--nokia-blue), var(--nokia-teal));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-}
-
-.about-content {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 2rem;
-}
-
-.about-card {
+/* Update Deployment Items */
+.deployment-item {
     background: var(--nokia-white);
-    padding: 2rem;
-    border-radius: 12px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    padding: 1rem;
+    border-radius: var(--border-radius-sm);
+    border-left: 4px solid var(--nokia-blue);
+    margin-bottom: 0.5rem;
+    cursor: pointer;
+    transition: all var(--transition-base);
 }
 
-.about-card h2 {
-    color: var(--nokia-blue);
-    margin-bottom: 1rem;
+.deployment-item:hover {
+    box-shadow: var(--shadow-md);
+    transform: translateX(4px);
 }
 
-.about-card ul {
-    list-style: none;
-    padding: 0;
+.deployment-item.selected {
+    border-left-color: var(--nokia-teal);
+    background: var(--nokia-teal-light);
 }
 
-.about-card ul li {
-    padding: 0.5rem 0;
-    border-bottom: 1px solid var(--nokia-light-gray);
+/* Status Badges */
+.status-badge {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 600;
 }
 
-.about-card ul li:last-child {
-    border-bottom: none;
+.status-badge.pending {
+    background: var(--nokia-warning-light);
+    color: var(--nokia-warning);
 }
 
-.developer-info {
-    background: var(--nokia-light-blue);
-    padding: 2rem;
-    border-radius: 12px;
-    grid-column: 1 / -1;
-    text-align: center;
+.status-badge.in-progress {
+    background: var(--nokia-info-light);
+    color: var(--nokia-info);
 }
 
-/* Responsive */
+.status-badge.completed {
+    background: var(--nokia-success-light);
+    color: var(--nokia-success);
+}
+
+.status-badge.failed {
+    background: var(--nokia-danger-light);
+    color: var(--nokia-danger);
+}
+
+/* Responsive Design Updates */
 @media (max-width: 768px) {
     .nav-container {
         flex-direction: column;
