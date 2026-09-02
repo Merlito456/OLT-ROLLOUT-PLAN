@@ -1178,4 +1178,402 @@ body {
     .stat-card {
         padding: 1rem;
     }
+    /* Dashboard Layout */
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+}
+
+.dashboard-left {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.dashboard-right {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+/* Dashboard Cards */
+.dashboard-card {
+    background: var(--nokia-white);
+    padding: 1.5rem;
+    border-radius: var(--border-radius-md);
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--nokia-light-gray);
+}
+
+.dashboard-card h2 {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--nokia-dark);
+    margin: 0 0 1rem 0;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--nokia-blue-light);
+}
+
+.dashboard-card.full-width {
+    grid-column: 1 / -1;
+}
+
+/* Activity Log */
+.activity-log {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.activity-item {
+    display: flex;
+    gap: 1rem;
+    padding: 0.5rem;
+    border-radius: var(--border-radius-sm);
+    background: var(--nokia-light-gray);
+}
+
+.activity-time {
+    font-weight: 600;
+    color: var(--nokia-blue);
+    min-width: 80px;
+}
+
+.activity-text {
+    color: var(--nokia-dark);
+}
+
+/* Monitoring Stats */
+.monitoring-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 1rem;
+}
+
+.monitoring-item {
+    text-align: center;
+    padding: 0.75rem;
+    background: var(--nokia-light-gray);
+    border-radius: var(--border-radius-sm);
+}
+
+.monitoring-label {
+    display: block;
+    font-size: 0.75rem;
+    color: var(--nokia-gray);
+    margin-bottom: 0.25rem;
+}
+
+.monitoring-value {
+    font-size: 1.25rem;
+    font-weight: 700;
+}
+
+.monitoring-value.danger { color: var(--nokia-danger); }
+.monitoring-value.warning { color: var(--nokia-warning); }
+.monitoring-value.success { color: var(--nokia-success); }
+
+/* Project Overview */
+.project-overview {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 1.5rem;
+}
+
+.map-placeholder {
+    height: 200px;
+    background: var(--nokia-light-gray);
+    border-radius: var(--border-radius-sm);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    padding: 1rem;
+}
+
+.map-marker {
+    padding: 0.5rem 1rem;
+    background: var(--nokia-white);
+    border-radius: var(--border-radius-sm);
+    box-shadow: var(--shadow-sm);
+    font-size: 0.875rem;
+}
+
+.project-legend {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+}
+
+.legend-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.legend-dot.active { background: var(--nokia-blue); }
+.legend-dot.onair { background: var(--nokia-teal); }
+.legend-dot.raawa { background: var(--nokia-orange); }
+.legend-dot.towerco { background: var(--nokia-warning); }
+.legend-dot.compliance { background: var(--nokia-info); }
+
+.sub-items {
+    display: flex;
+    flex-direction: column;
+    margin-left: 1.5rem;
+    font-size: 0.75rem;
+    color: var(--nokia-gray);
+}
+
+/* Stats Grid Small */
+.stats-grid-small {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+}
+
+.stat-card-small {
+    background: var(--nokia-white);
+    padding: 1rem;
+    border-radius: var(--border-radius-sm);
+    box-shadow: var(--shadow-sm);
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    border-left: 3px solid var(--nokia-blue);
+}
+
+.stat-icon-small {
+    font-size: 1.5rem;
+}
+
+.stat-card-small h4 {
+    font-size: 0.7rem;
+    color: var(--nokia-gray);
+    font-weight: 600;
+    text-transform: uppercase;
+    margin: 0;
+}
+
+.stat-number-small {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--nokia-blue);
+    margin: 0;
+}
+
+/* Engineer Status */
+.engineer-status-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.engineer-status-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem;
+    background: var(--nokia-light-gray);
+    border-radius: var(--border-radius-sm);
+}
+
+.engineer-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.engineer-name {
+    font-weight: 600;
+    font-size: 0.875rem;
+}
+
+.engineer-last-login {
+    font-size: 0.75rem;
+    color: var(--nokia-gray);
+}
+
+.engineer-status-badge {
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.engineer-status-badge.active {
+    background: var(--nokia-success-light);
+    color: var(--nokia-success);
+}
+
+.engineer-status-badge.inactive {
+    background: var(--nokia-danger-light);
+    color: var(--nokia-danger);
+}
+
+/* Quick Actions */
+.quick-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+}
+
+.quick-action-link {
+    padding: 0.75rem;
+    background: var(--nokia-light-gray);
+    border-radius: var(--border-radius-sm);
+    text-decoration: none;
+    color: var(--nokia-dark);
+    font-weight: 500;
+    font-size: 0.875rem;
+    text-align: center;
+    transition: all var(--transition-base);
+}
+
+.quick-action-link:hover {
+    background: var(--nokia-blue);
+    color: white;
+    transform: translateY(-2px);
+}
+
+/* Timeline Stats */
+.timeline-stats {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--nokia-light-gray);
+}
+
+.timeline-stat {
+    display: flex;
+    gap: 2rem;
+    font-size: 0.875rem;
+    color: var(--nokia-gray);
+}
+
+.timeline-stat span {
+    font-weight: 500;
+}
+
+/* Table */
+.dashboard-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.875rem;
+}
+
+.dashboard-table thead {
+    background: var(--nokia-blue-light);
+}
+
+.dashboard-table th {
+    padding: 0.75rem;
+    text-align: left;
+    font-weight: 600;
+    color: var(--nokia-blue-dark);
+}
+
+.dashboard-table td {
+    padding: 0.75rem;
+    border-bottom: 1px solid var(--nokia-light-gray);
+}
+
+.dashboard-table tr:hover {
+    background: var(--nokia-blue-light);
+}
+
+.table-responsive {
+    overflow-x: auto;
+}
+
+/* Progress Bar */
+.progress-bar {
+    background: var(--nokia-light-gray);
+    border-radius: 9999px;
+    overflow: hidden;
+    height: 20px;
+    min-width: 80px;
+    position: relative;
+}
+
+.progress-fill {
+    background: var(--nokia-blue);
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.65rem;
+    font-weight: 600;
+    color: white;
+    border-radius: 9999px;
+    transition: width 0.5s ease;
+}
+
+/* Status Badges */
+.status-badge {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.status-badge.completed {
+    background: var(--nokia-success-light);
+    color: var(--nokia-success);
+}
+
+.status-badge.in-progress {
+    background: var(--nokia-info-light);
+    color: var(--nokia-info);
+}
+
+.status-badge.pending {
+    background: var(--nokia-warning-light);
+    color: var(--nokia-warning);
+}
+
+.status-badge.failed {
+    background: var(--nokia-danger-light);
+    color: var(--nokia-danger);
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .project-overview {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .monitoring-stats {
+        grid-template-columns: 1fr;
+    }
+    
+    .stats-grid-small {
+        grid-template-columns: 1fr;
+    }
+    
+    .quick-actions {
+        grid-template-columns: 1fr;
+    }
+    
+    .timeline-stat {
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+}
 }
