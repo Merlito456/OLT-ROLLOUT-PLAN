@@ -1,10 +1,10 @@
 // src/components/deployment/ActualDeployment.tsx
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../../lib/supabaseClient';
-import { ActualDeployment, ActivityUpdate } from '../../types';
+import type { ActualDeployment as ActualDeploymentType, ActivityUpdate } from '../../types';
 
 const ActualDeployment: React.FC = () => {
-    const [deployments, setDeployments] = useState<ActualDeployment[]>([]);
+    const [deployments, setDeployments] = useState<ActualDeploymentType[]>([]);
     const [selectedDeployment, setSelectedDeployment] = useState<string | null>(null);
     const [updates, setUpdates] = useState<ActivityUpdate[]>([]);
     const [newProgress, setNewProgress] = useState<number>(0);
@@ -53,7 +53,7 @@ const ActualDeployment: React.FC = () => {
         if (!selectedDeployment) return;
 
         try {
-            const { data, error } = await supabase
+            const { error } = await supabase
                 .from('activity_updates')
                 .insert([
                     {
@@ -61,8 +61,7 @@ const ActualDeployment: React.FC = () => {
                         time: newTime,
                         progress: newProgress
                     }
-                ])
-                .select();
+                ]);
 
             if (error) throw error;
             
@@ -91,7 +90,7 @@ const ActualDeployment: React.FC = () => {
                         <div 
                             key={deployment.id}
                             className={`deployment-item ${selectedDeployment === deployment.id ? 'selected' : ''}`}
-                            onClick={() => setSelectedDeployment(deployment.id)}
+                            onClick={() => setSelectedDeployment(deployment.id || null)}
                         >
                             <h3>{deployment.activity}</h3>
                             <p>Progress: {deployment.progress}%</p>
@@ -105,7 +104,7 @@ const ActualDeployment: React.FC = () => {
                         <>
                             <h2>Activity Updates</h2>
                             <div className="updates-list">
-                                {updates.map((update, index) => (
+                                {updates.map((update) => (
                                     <div key={update.id} className="update-item">
                                         <span className="update-time">
                                             {new Date(update.time).toLocaleString()}
