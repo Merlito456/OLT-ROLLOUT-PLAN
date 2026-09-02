@@ -1,11 +1,11 @@
 // src/components/sites/SiteMasterlist.tsx
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../../lib/supabaseClient';
-import { SiteMasterlist } from '../../types';
+import type { SiteMasterlist as SiteMasterlistType } from '../../types';
 import { Link } from 'react-router-dom';
 
 const SiteMasterlist: React.FC = () => {
-    const [sites, setSites] = useState<SiteMasterlist[]>([]);
+    const [sites, setSites] = useState<SiteMasterlistType[]>([]);
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState('');
     const [filterTerritory, setFilterTerritory] = useState('');
