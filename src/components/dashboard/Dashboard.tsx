@@ -124,7 +124,7 @@ const Dashboard: React.FC = () => {
             <div className="dashboard-header">
                 <div className="header-top">
                     <div>
-                        <h1>Rollout Dashboard</h1>
+                        <h1>Nokia Rollout Dashboard</h1>
                         <p className="header-subtitle">Real-time monitoring of all rollout activities</p>
                     </div>
                     <div className="header-actions">
