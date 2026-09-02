@@ -8,13 +8,7 @@ interface AuthContextType {
   signIn: (email: string, password: string) => Promise<void>;
   signUp: (email: string, password: string) => Promise<void>;
   signOut: () => Promise<void>;
-}
-interface AuthContextType {
-  user: User | null;
-  loading: boolean;
-  signIn: (email: string, password: string) => Promise<void>;
-  signUp: (email: string, password: string) => Promise<void>;
-  signOut: () => Promise<void>; // Make sure this exists
+  logout: () => Promise<void>;  // Added for Navigation.tsx
 }
 
 export const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -54,8 +48,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     if (error) throw error;
   };
 
+  // Alias for signOut to support both names
+  const logout = signOut;
+
   return (
-    <AuthContext.Provider value={{ user, loading, signIn, signUp, signOut }}>
+    <AuthContext.Provider value={{ user, loading, signIn, signUp, signOut, logout }}>
       {children}
     </AuthContext.Provider>
   );
