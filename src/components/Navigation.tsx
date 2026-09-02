@@ -1,7 +1,6 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
-import logoNokia from '../../public/logo-nokia.svg';  // Changed from .png to .svg
 
 const Navigation: React.FC = () => {
     const { user, logout } = useAuth();
@@ -15,8 +14,9 @@ const Navigation: React.FC = () => {
         <nav className="nokia-nav">
             <div className="nav-container">
                 <div className="nav-brand">
-                    <img src={logoNokia} alt="Nokia" className="nav-logo" />
-                    <span className="brand-text">Rollout Management</span>
+                    <span className="brand-text" style={{ fontSize: '1.5rem', fontWeight: '700', color: 'white' }}>
+                        📡 Nokia Rollout
+                    </span>
                 </div>
                 <ul className="nav-menu">
                     <li><Link to="/" className={isActive('/') ? 'active' : ''}>Dashboard</Link></li>
