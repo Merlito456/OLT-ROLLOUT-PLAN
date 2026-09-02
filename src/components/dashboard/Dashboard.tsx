@@ -4,23 +4,13 @@ import { supabase } from '../../lib/supabaseClient';
 import { SiteMasterlist, Project, Notification } from '../../types';
 import { Link } from 'react-router-dom';
 import { 
-  BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, 
-  LineChart, Line, PieChart, Pie, Cell, Legend, CartesianGrid 
+  BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer,
+  CartesianGrid 
 } from 'recharts';
 
-// Define types for chart data
-interface ChartData {
-  name: string;
-  value?: number;
-  progress?: number;
-  status?: string;
-  sites?: number;
-  projects?: number;
-}
-
 const Dashboard: React.FC = () => {
-    const [sites, setSites] = useState<SiteMasterlist[]>([]);
-    const [projects, setProjects] = useState<Project[]>([]);
+    const [, setSites] = useState<SiteMasterlist[]>([]);
+    const [, setProjects] = useState<Project[]>([]);
     const [notifications, setNotifications] = useState<Notification[]>([]);
     const [loading, setLoading] = useState(true);
     const [stats, setStats] = useState({
@@ -33,9 +23,6 @@ const Dashboard: React.FC = () => {
         totalEngineers: 0,
         sitesWithIssues: 0
     });
-
-    // Chart colors based on Nokia theme
-    const COLORS = ['#005AFF', '#00B4A0', '#FF6B00', '#F59E0B', '#EF4444', '#8B5CF6'];
 
     useEffect(() => {
         fetchDashboardData();
@@ -67,13 +54,13 @@ const Dashboard: React.FC = () => {
 
             setStats({
                 totalSites: sitesData?.length || 0,
-                activeProjects: projectsData?.filter((p: Project) => p.status === 'ACTIVE').length || 0,
-                pendingRaawa: sitesData?.filter((s: SiteMasterlist) => !s.plaid).length || 0,
-                pendingTowerco: sitesData?.filter((s: SiteMasterlist) => !s.towerco).length || 0,
-                inProgress: projectsData?.filter((p: Project) => p.status === 'IN_PROGRESS').length || 0,
-                completed: projectsData?.filter((p: Project) => p.status === 'COMPLETED').length || 0,
+                activeProjects: projectsData?.filter((p: any) => p.status === 'ACTIVE').length || 0,
+                pendingRaawa: sitesData?.filter((s: any) => !s.plaid).length || 0,
+                pendingTowerco: sitesData?.filter((s: any) => !s.towerco).length || 0,
+                inProgress: projectsData?.filter((p: any) => p.status === 'IN_PROGRESS').length || 0,
+                completed: projectsData?.filter((p: any) => p.status === 'COMPLETED').length || 0,
                 totalEngineers: 12,
-                sitesWithIssues: sitesData?.filter((s: SiteMasterlist) => s.territory === 'ISSUE').length || 0
+                sitesWithIssues: sitesData?.filter((s: any) => s.territory === 'ISSUE').length || 0
             });
         } catch (error) {
             console.error('Error fetching dashboard data:', error);
@@ -96,15 +83,6 @@ const Dashboard: React.FC = () => {
         { month: 'Oct', progress: 98 },
         { month: 'Nov', progress: 99 },
         { month: 'Dec', progress: 100 }
-    ];
-
-    // Site activity data
-    const siteActivityData = [
-        { name: 'Site A', progress: 100, status: 'Completed' },
-        { name: 'Site B', progress: 75, status: 'In Progress' },
-        { name: 'Site C', progress: 50, status: 'In Progress' },
-        { name: 'Site D', progress: 30, status: 'Pending' },
-        { name: 'Site E', progress: 10, status: 'Pending' }
     ];
 
     // Engineer login status data
@@ -216,11 +194,11 @@ const Dashboard: React.FC = () => {
                         <div className="project-overview">
                             <div className="project-map">
                                 <div className="map-placeholder">
-                                    <div className="map-marker site">📍 Site</div>
-                                    <div className="map-marker shillong">📍 Shillongtoe</div>
-                                    <div className="map-marker mithi">📍 Mithi Sam</div>
-                                    <div className="map-marker phirang">📍 Phirangteo</div>
-                                    <div className="map-marker mudimara">📍 Mudimara</div>
+                                    <div className="map-marker">📍 Site</div>
+                                    <div className="map-marker">📍 Shillongtoe</div>
+                                    <div className="map-marker">📍 Mithi Sam</div>
+                                    <div className="map-marker">📍 Phirangteo</div>
+                                    <div className="map-marker">📍 Mudimara</div>
                                 </div>
                             </div>
                             <div className="project-legend">
@@ -403,7 +381,7 @@ const Dashboard: React.FC = () => {
                         <h2>Recent Notifications</h2>
                         <div className="notification-list">
                             {notifications.length > 0 ? (
-                                notifications.map((notification: Notification, index: number) => (
+                                notifications.map((notification: any, index: number) => (
                                     <div key={index} className="notification-item">
                                         <div className={`notification-dot ${notification.type?.toLowerCase() || ''}`}></div>
                                         <div className="notification-content">
