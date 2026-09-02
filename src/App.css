@@ -1,0 +1,144 @@
+/* src/App.css */
+
+/* Nokia Telecom Colors */
+:root {
+    --nokia-blue: #005AFF;
+    --nokia-dark-blue: #0038A8;
+    --nokia-light-blue: #E8F1FF;
+    --nokia-teal: #00B4A0;
+    --nokia-orange: #FF6B00;
+    --nokia-dark: #1A1A2E;
+    --nokia-gray: #6B7280;
+    --nokia-light-gray: #F3F4F6;
+    --nokia-white: #FFFFFF;
+    --nokia-success: #10B981;
+    --nokia-warning: #F59E0B;
+    --nokia-danger: #EF4444;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: var(--nokia-light-gray);
+    color: var(--nokia-dark);
+}
+
+/* Navigation */
+.nokia-nav {
+    background: var(--nokia-dark);
+    color: var(--nokia-white);
+    padding: 1rem 2rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.nav-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.nav-brand {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.nav-logo {
+    height: 40px;
+    width: auto;
+}
+
+.brand-text {
+    font-size: 1.5rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, var(--nokia-blue), var(--nokia-teal));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.nav-menu {
+    display: flex;
+    list-style: none;
+    gap: 1.5rem;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.nav-menu a {
+    color: var(--nokia-white);
+    text-decoration: none;
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+}
+
+.nav-menu a:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.nav-menu a.active {
+    background: var(--nokia-blue);
+    color: var(--nokia-white);
+}
+
+.logout-btn {
+    background: var(--nokia-danger);
+    color: white;
+    border: none;
+    padding: 0.5rem 1.5rem;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.logout-btn:hover {
+    background: #DC2626;
+    transform: translateY(-1px);
+}
+
+/* Dashboard */
+.dashboard {
+    padding: 2rem;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.dashboard-header {
+    margin-bottom: 2rem;
+}
+
+.dashboard-header h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--nokia-dark);
+    margin-bottom: 1.5rem;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+}
+
+.stat-card {
+    background: var(--nokia-white);
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
+
+.stat-card:hover {
+   
