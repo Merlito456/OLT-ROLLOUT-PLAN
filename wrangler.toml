@@ -1,0 +1,7 @@
+name = "nokia-rollout-management"
+pages_build_output_dir = "dist"
+compatibility_date = "2024-01-01"
+
+[[kv_namespaces]]
+binding = "NOKIA_KV"
+id = "your-kv-namespace-id"
