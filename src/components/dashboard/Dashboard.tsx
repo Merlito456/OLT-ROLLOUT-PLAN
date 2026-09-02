@@ -22,9 +22,6 @@ const Dashboard: React.FC = () => {
         sitesWithIssues: 0
     });
 
-    // Chart colors based on Nokia theme
-    const COLORS = ['#005AFF', '#00B4A0', '#FF6B00', '#F59E0B', '#EF4444', '#8B5CF6'];
-
     useEffect(() => {
         fetchDashboardData();
     }, []);
@@ -33,18 +30,15 @@ const Dashboard: React.FC = () => {
         try {
             setLoading(true);
             
-            // Fetch sites
             const { data: sitesData } = await supabase
                 .from('site_masterlist')
                 .select('*')
                 .limit(100);
 
-            // Fetch projects
             const { data: projectsData } = await supabase
                 .from('projects')
                 .select('*');
 
-            // Fetch notifications
             const { data: notificationsData } = await supabase
                 .from('notifications')
                 .select('*')
@@ -56,7 +50,6 @@ const Dashboard: React.FC = () => {
             if (projectsData) setProjects(projectsData);
             if (notificationsData) setNotifications(notificationsData);
 
-            // Update stats
             setStats({
                 totalSites: sitesData?.length || 0,
                 activeProjects: projectsData?.filter((p: any) => p.status === 'ACTIVE').length || 0,
@@ -74,7 +67,6 @@ const Dashboard: React.FC = () => {
         }
     };
 
-    // Prepare data for charts
     const projectProgressData = projects.map((p: any) => ({
         name: p.name?.substring(0, 15) || 'Unnamed',
         progress: Math.floor(Math.random() * 100),
@@ -108,7 +100,6 @@ const Dashboard: React.FC = () => {
 
     return (
         <div className="dashboard">
-            {/* Header Section */}
             <div className="dashboard-header">
                 <div className="header-top">
                     <div>
@@ -125,7 +116,6 @@ const Dashboard: React.FC = () => {
                     </div>
                 </div>
                 
-                {/* Stats Grid */}
                 <div className="stats-grid">
                     <div className="stat-card">
                         <div className="stat-icon">📍</div>
@@ -178,7 +168,6 @@ const Dashboard: React.FC = () => {
                 </div>
             </div>
 
-            {/* Charts Section */}
             <div className="dashboard-charts">
                 <div className="chart-card">
                     <h2>Project Progress Overview</h2>
@@ -224,7 +213,6 @@ const Dashboard: React.FC = () => {
             </div>
 
             <div className="dashboard-bottom">
-                {/* Activity Trends */}
                 <div className="chart-card full-width">
                     <h2>Activity Trends</h2>
                     <div className="chart-container">
@@ -247,7 +235,6 @@ const Dashboard: React.FC = () => {
                     </div>
                 </div>
 
-                {/* Notifications & Quick Actions */}
                 <div className="dashboard-sidebar">
                     <div className="notification-card">
                         <div className="notification-header">
@@ -300,7 +287,6 @@ const Dashboard: React.FC = () => {
                 </div>
             </div>
 
-            {/* Recent Sites */}
             <div className="recent-sites-card">
                 <h2>📌 Recently Added Sites</h2>
                 <div className="recent-sites-list">
