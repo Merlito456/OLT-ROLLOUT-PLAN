@@ -1,6 +1,6 @@
 // src/components/about/AboutPage.tsx
 import React from 'react';
-import logoNokia from '../../../public/logo-nokia.png';
+import logoNokia from '../../../public/logo-nokia.svg';  // Changed from .png to .svg
 
 const AboutPage: React.FC = () => {
     return (
