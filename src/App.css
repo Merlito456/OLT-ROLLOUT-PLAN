@@ -141,4 +141,204 @@ body {
 }
 
 .stat-card:hover {
-   
+    transform: translateY(-4px);
+}
+
+.stat-card h3 {
+    font-size: 0.875rem;
+    color: var(--nokia-gray);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.stat-number {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--nokia-blue);
+    margin-top: 0.5rem;
+}
+
+.dashboard-content {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+/* Buttons */
+.btn-primary {
+    background: var(--nokia-blue);
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+    background: var(--nokia-dark-blue);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 90, 255, 0.3);
+}
+
+.btn-view {
+    background: var(--nokia-light-blue);
+    color: var(--nokia-blue);
+    padding: 0.25rem 0.75rem;
+    border-radius: 4px;
+    text-decoration: none;
+    font-size: 0.875rem;
+}
+
+/* Tables */
+.table-container {
+    background: var(--nokia-white);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.site-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.site-table thead {
+    background: var(--nokia-light-blue);
+}
+
+.site-table th {
+    padding: 1rem;
+    text-align: left;
+    font-weight: 600;
+    color: var(--nokia-dark);
+    border-bottom: 2px solid var(--nokia-blue);
+}
+
+.site-table td {
+    padding: 1rem;
+    border-bottom: 1px solid var(--nokia-light-gray);
+}
+
+.site-table tr:hover {
+    background: var(--nokia-light-gray);
+}
+
+/* Forms */
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: var(--nokia-dark);
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 0.75rem;
+    border: 2px solid var(--nokia-light-gray);
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: var(--nokia-blue);
+}
+
+/* About Page */
+.about-page {
+    padding: 2rem;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.about-header {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.about-header h1 {
+    font-size: 3rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, var(--nokia-blue), var(--nokia-teal));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.about-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+}
+
+.about-card {
+    background: var(--nokia-white);
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.about-card h2 {
+    color: var(--nokia-blue);
+    margin-bottom: 1rem;
+}
+
+.about-card ul {
+    list-style: none;
+    padding: 0;
+}
+
+.about-card ul li {
+    padding: 0.5rem 0;
+    border-bottom: 1px solid var(--nokia-light-gray);
+}
+
+.about-card ul li:last-child {
+    border-bottom: none;
+}
+
+.developer-info {
+    background: var(--nokia-light-blue);
+    padding: 2rem;
+    border-radius: 12px;
+    grid-column: 1 / -1;
+    text-align: center;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .nav-container {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .nav-menu {
+        flex-direction: column;
+        gap: 0.5rem;
+        width: 100%;
+    }
+
+    .dashboard-content {
+        grid-template-columns: 1fr;
+    }
+
+    .about-content {
+        grid-template-columns: 1fr;
+    }
+
+    .stats-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+}
