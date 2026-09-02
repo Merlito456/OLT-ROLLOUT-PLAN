@@ -1,425 +1,1394 @@
-// src/components/dashboard/Dashboard.tsx
-import React, { useState, useEffect } from 'react';
-import { supabase } from '../../lib/supabaseClient';
-import { SiteMasterlist, Project, Notification } from '../../types';
-import { Link } from 'react-router-dom';
-import { 
-  BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer,
-  CartesianGrid 
-} from 'recharts';
+/* src/App.css */
 
-const Dashboard: React.FC = () => {
-    const [, setSites] = useState<SiteMasterlist[]>([]);
-    const [, setProjects] = useState<Project[]>([]);
-    const [notifications, setNotifications] = useState<Notification[]>([]);
-    const [loading, setLoading] = useState(true);
-    const [stats, setStats] = useState({
-        totalSites: 0,
-        activeProjects: 0,
-        pendingRaawa: 0,
-        pendingTowerco: 0,
-        inProgress: 0,
-        completed: 0,
-        totalEngineers: 0,
-        sitesWithIssues: 0
-    });
+/* ============================================
+   Nokia Telecom Theme Colors
+   ============================================ */
+:root {
+    /* Primary Colors */
+    --nokia-blue: #005AFF;
+    --nokia-blue-dark: #0038A8;
+    --nokia-blue-light: #E8F1FF;
+    --nokia-blue-gradient: linear-gradient(135deg, #005AFF 0%, #0038A8 100%);
+    
+    /* Secondary Colors */
+    --nokia-teal: #00B4A0;
+    --nokia-teal-light: #E6F9F6;
+    --nokia-orange: #FF6B00;
+    --nokia-orange-light: #FFF0E6;
+    
+    /* Neutral Colors */
+    --nokia-dark: #1A1A2E;
+    --nokia-dark-gray: #2D2D44;
+    --nokia-gray: #6B7280;
+    --nokia-gray-light: #9CA3AF;
+    --nokia-light-gray: #F3F4F6;
+    --nokia-white: #FFFFFF;
+    
+    /* Status Colors */
+    --nokia-success: #10B981;
+    --nokia-success-light: #D1FAE5;
+    --nokia-warning: #F59E0B;
+    --nokia-warning-light: #FEF3C7;
+    --nokia-danger: #EF4444;
+    --nokia-danger-light: #FEE2E2;
+    --nokia-info: #3B82F6;
+    --nokia-info-light: #DBEAFE;
+    
+    /* Shadows */
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.15);
+    --shadow-nokia: 0 4px 20px rgba(0, 90, 255, 0.15);
+    
+    /* Borders */
+    --border-radius-sm: 6px;
+    --border-radius-md: 10px;
+    --border-radius-lg: 16px;
+    --border-radius-xl: 24px;
+    
+    /* Transitions */
+    --transition-fast: 150ms ease;
+    --transition-base: 300ms ease;
+    --transition-slow: 500ms ease;
+}
 
-    useEffect(() => {
-        fetchDashboardData();
-    }, []);
+/* ============================================
+   Reset & Base Styles
+   ============================================ */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
 
-    const fetchDashboardData = async () => {
-        try {
-            setLoading(true);
-            
-            const { data: sitesData } = await supabase
-                .from('site_masterlist')
-                .select('*')
-                .limit(100);
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #F8FAFC;
+    color: var(--nokia-dark);
+    margin: 0;
+    min-height: 100vh;
+}
 
-            const { data: projectsData } = await supabase
-                .from('projects')
-                .select('*');
+/* ============================================
+   Navigation
+   ============================================ */
+.nokia-nav {
+    background: var(--nokia-blue-gradient);
+    padding: 1rem 2rem;
+    box-shadow: var(--shadow-lg);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    border-bottom: 3px solid var(--nokia-teal);
+}
 
-            const { data: notificationsData } = await supabase
-                .from('notifications')
-                .select('*')
-                .eq('is_read', false)
-                .order('created_at', { ascending: false })
-                .limit(10);
+.nav-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1440px;
+    margin: 0 auto;
+}
 
-            if (sitesData) setSites(sitesData);
-            if (projectsData) setProjects(projectsData);
-            if (notificationsData) setNotifications(notificationsData);
+.nav-brand {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
 
-            setStats({
-                totalSites: sitesData?.length || 0,
-                activeProjects: projectsData?.filter((p: any) => p.status === 'ACTIVE').length || 0,
-                pendingRaawa: sitesData?.filter((s: any) => !s.plaid).length || 0,
-                pendingTowerco: sitesData?.filter((s: any) => !s.towerco).length || 0,
-                inProgress: projectsData?.filter((p: any) => p.status === 'IN_PROGRESS').length || 0,
-                completed: projectsData?.filter((p: any) => p.status === 'COMPLETED').length || 0,
-                totalEngineers: 12,
-                sitesWithIssues: sitesData?.filter((s: any) => s.territory === 'ISSUE').length || 0
-            });
-        } catch (error) {
-            console.error('Error fetching dashboard data:', error);
-        } finally {
-            setLoading(false);
-        }
-    };
+.nav-logo {
+    height: 40px;
+    width: auto;
+}
 
-    // Deployment timeline data (2024)
-    const deploymentData = [
-        { month: 'Jan', progress: 65 },
-        { month: 'Feb', progress: 70 },
-        { month: 'Mar', progress: 75 },
-        { month: 'Apr', progress: 80 },
-        { month: 'May', progress: 85 },
-        { month: 'Jun', progress: 90 },
-        { month: 'Jul', progress: 92 },
-        { month: 'Aug', progress: 95 },
-        { month: 'Sep', progress: 97 },
-        { month: 'Oct', progress: 98 },
-        { month: 'Nov', progress: 99 },
-        { month: 'Dec', progress: 100 }
-    ];
+.brand-text {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--nokia-white);
+    letter-spacing: 0.5px;
+}
 
-    // Engineer login status data
-    const engineerStatusData = [
-        { name: 'Engineer 1', status: 'Active', lastLogin: '2 hours ago' },
-        { name: 'Engineer 2', status: 'Active', lastLogin: '5 hours ago' },
-        { name: 'Engineer 3', status: 'Inactive', lastLogin: '2 days ago' },
-        { name: 'Engineer 4', status: 'Active', lastLogin: '1 hour ago' },
-        { name: 'Engineer 5', status: 'Inactive', lastLogin: '3 weeks ago' }
-    ];
+.nav-menu {
+    display: flex;
+    list-style: none;
+    gap: 0.5rem;
+    align-items: center;
+    flex-wrap: wrap;
+}
 
-    if (loading) {
-        return (
-            <div className="dashboard-loading">
-                <div className="loading-spinner"></div>
-                <p>Loading dashboard...</p>
-            </div>
-        );
+.nav-menu a {
+    color: rgba(255, 255, 255, 0.85);
+    text-decoration: none;
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    border-radius: var(--border-radius-sm);
+    transition: all var(--transition-base);
+    font-size: 0.9rem;
+}
+
+.nav-menu a:hover {
+    background: rgba(255, 255, 255, 0.15);
+    color: var(--nokia-white);
+}
+
+.nav-menu a.active {
+    background: var(--nokia-teal);
+    color: var(--nokia-white);
+    box-shadow: var(--shadow-md);
+}
+
+.logout-btn {
+    background: var(--nokia-danger);
+    color: white;
+    border: none;
+    padding: 0.5rem 1.5rem;
+    border-radius: var(--border-radius-sm);
+    cursor: pointer;
+    font-weight: 600;
+    transition: all var(--transition-base);
+}
+
+.logout-btn:hover {
+    background: #DC2626;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+}
+
+/* ============================================
+   Dashboard Layout
+   ============================================ */
+.dashboard {
+    padding: 2rem;
+    max-width: 1440px;
+    margin: 0 auto;
+}
+
+.dashboard-header {
+    margin-bottom: 2rem;
+}
+
+.header-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 2rem;
+}
+
+.header-top h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--nokia-dark);
+    margin: 0;
+}
+
+.header-subtitle {
+    color: var(--nokia-gray);
+    font-size: 1rem;
+    margin-top: 0.25rem;
+}
+
+.header-actions {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+/* ============================================
+   Dashboard Grid
+   ============================================ */
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+}
+
+.dashboard-left {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.dashboard-right {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+/* ============================================
+   Dashboard Cards
+   ============================================ */
+.dashboard-card {
+    background: var(--nokia-white);
+    padding: 1.5rem;
+    border-radius: var(--border-radius-md);
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--nokia-light-gray);
+}
+
+.dashboard-card h2 {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--nokia-dark);
+    margin: 0 0 1rem 0;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--nokia-blue-light);
+}
+
+.dashboard-card.full-width {
+    grid-column: 1 / -1;
+}
+
+/* ============================================
+   Dashboard Loading
+   ============================================ */
+.dashboard-loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 400px;
+    gap: 1rem;
+}
+
+.loading-spinner {
+    width: 48px;
+    height: 48px;
+    border: 4px solid var(--nokia-light-gray);
+    border-top: 4px solid var(--nokia-blue);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* ============================================
+   Stats Grid
+   ============================================ */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+}
+
+.stat-card {
+    background: var(--nokia-white);
+    padding: 1.5rem;
+    border-radius: var(--border-radius-md);
+    box-shadow: var(--shadow-sm);
+    transition: all var(--transition-base);
+    border-left: 4px solid var(--nokia-blue);
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.stat-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-nokia);
+}
+
+.stat-card:nth-child(1) { border-left-color: var(--nokia-blue); }
+.stat-card:nth-child(2) { border-left-color: var(--nokia-teal); }
+.stat-card:nth-child(3) { border-left-color: var(--nokia-orange); }
+.stat-card:nth-child(4) { border-left-color: var(--nokia-warning); }
+.stat-card:nth-child(5) { border-left-color: var(--nokia-info); }
+.stat-card:nth-child(6) { border-left-color: var(--nokia-success); }
+
+.stat-icon {
+    font-size: 2rem;
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--nokia-blue-light);
+    border-radius: var(--border-radius-sm);
+    flex-shrink: 0;
+}
+
+.stat-card h3 {
+    font-size: 0.75rem;
+    color: var(--nokia-gray);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin: 0 0 0.25rem 0;
+}
+
+.stat-number {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--nokia-blue);
+    margin: 0;
+}
+
+.stat-trend {
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.stat-trend.up {
+    color: var(--nokia-success);
+}
+
+.stat-trend.down {
+    color: var(--nokia-danger);
+}
+
+/* ============================================
+   Stats Grid Small
+   ============================================ */
+.stats-grid-small {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+}
+
+.stat-card-small {
+    background: var(--nokia-white);
+    padding: 1rem;
+    border-radius: var(--border-radius-sm);
+    box-shadow: var(--shadow-sm);
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    border-left: 3px solid var(--nokia-blue);
+}
+
+.stat-icon-small {
+    font-size: 1.5rem;
+}
+
+.stat-card-small h4 {
+    font-size: 0.7rem;
+    color: var(--nokia-gray);
+    font-weight: 600;
+    text-transform: uppercase;
+    margin: 0;
+}
+
+.stat-number-small {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--nokia-blue);
+    margin: 0;
+}
+
+/* ============================================
+   Activity Log
+   ============================================ */
+.activity-log {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.activity-item {
+    display: flex;
+    gap: 1rem;
+    padding: 0.5rem;
+    border-radius: var(--border-radius-sm);
+    background: var(--nokia-light-gray);
+}
+
+.activity-time {
+    font-weight: 600;
+    color: var(--nokia-blue);
+    min-width: 80px;
+}
+
+.activity-text {
+    color: var(--nokia-dark);
+}
+
+/* ============================================
+   Monitoring Stats
+   ============================================ */
+.monitoring-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 1rem;
+}
+
+.monitoring-item {
+    text-align: center;
+    padding: 0.75rem;
+    background: var(--nokia-light-gray);
+    border-radius: var(--border-radius-sm);
+}
+
+.monitoring-label {
+    display: block;
+    font-size: 0.75rem;
+    color: var(--nokia-gray);
+    margin-bottom: 0.25rem;
+}
+
+.monitoring-value {
+    font-size: 1.25rem;
+    font-weight: 700;
+}
+
+.monitoring-value.danger { color: var(--nokia-danger); }
+.monitoring-value.warning { color: var(--nokia-warning); }
+.monitoring-value.success { color: var(--nokia-success); }
+
+/* ============================================
+   Project Overview
+   ============================================ */
+.project-overview {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 1.5rem;
+}
+
+.map-placeholder {
+    height: 200px;
+    background: var(--nokia-light-gray);
+    border-radius: var(--border-radius-sm);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    padding: 1rem;
+}
+
+.map-marker {
+    padding: 0.5rem 1rem;
+    background: var(--nokia-white);
+    border-radius: var(--border-radius-sm);
+    box-shadow: var(--shadow-sm);
+    font-size: 0.875rem;
+}
+
+.project-legend {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+}
+
+.legend-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.legend-dot.active { background: var(--nokia-blue); }
+.legend-dot.onair { background: var(--nokia-teal); }
+.legend-dot.raawa { background: var(--nokia-orange); }
+.legend-dot.towerco { background: var(--nokia-warning); }
+.legend-dot.compliance { background: var(--nokia-info); }
+
+.sub-items {
+    display: flex;
+    flex-direction: column;
+    margin-left: 1.5rem;
+    font-size: 0.75rem;
+    color: var(--nokia-gray);
+}
+
+/* ============================================
+   Charts
+   ============================================ */
+.chart-container {
+    width: 100%;
+    height: 300px;
+}
+
+/* ============================================
+   Timeline Stats
+   ============================================ */
+.timeline-stats {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--nokia-light-gray);
+}
+
+.timeline-stat {
+    display: flex;
+    gap: 2rem;
+    font-size: 0.875rem;
+    color: var(--nokia-gray);
+}
+
+.timeline-stat span {
+    font-weight: 500;
+}
+
+/* ============================================
+   Dashboard Table
+   ============================================ */
+.dashboard-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.875rem;
+}
+
+.dashboard-table thead {
+    background: var(--nokia-blue-light);
+}
+
+.dashboard-table th {
+    padding: 0.75rem;
+    text-align: left;
+    font-weight: 600;
+    color: var(--nokia-blue-dark);
+}
+
+.dashboard-table td {
+    padding: 0.75rem;
+    border-bottom: 1px solid var(--nokia-light-gray);
+}
+
+.dashboard-table tr:hover {
+    background: var(--nokia-blue-light);
+}
+
+.table-responsive {
+    overflow-x: auto;
+}
+
+/* ============================================
+   Progress Bar
+   ============================================ */
+.progress-bar {
+    background: var(--nokia-light-gray);
+    border-radius: 9999px;
+    overflow: hidden;
+    height: 20px;
+    min-width: 80px;
+    position: relative;
+}
+
+.progress-fill {
+    background: var(--nokia-blue);
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.65rem;
+    font-weight: 600;
+    color: white;
+    border-radius: 9999px;
+    transition: width 0.5s ease;
+}
+
+/* ============================================
+   Status Badges
+   ============================================ */
+.status-badge {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.status-badge.completed {
+    background: var(--nokia-success-light);
+    color: var(--nokia-success);
+}
+
+.status-badge.in-progress {
+    background: var(--nokia-info-light);
+    color: var(--nokia-info);
+}
+
+.status-badge.pending {
+    background: var(--nokia-warning-light);
+    color: var(--nokia-warning);
+}
+
+.status-badge.failed {
+    background: var(--nokia-danger-light);
+    color: var(--nokia-danger);
+}
+
+/* ============================================
+   Engineer Status
+   ============================================ */
+.engineer-status-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.engineer-status-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem;
+    background: var(--nokia-light-gray);
+    border-radius: var(--border-radius-sm);
+}
+
+.engineer-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.engineer-name {
+    font-weight: 600;
+    font-size: 0.875rem;
+}
+
+.engineer-last-login {
+    font-size: 0.75rem;
+    color: var(--nokia-gray);
+}
+
+.engineer-status-badge {
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.engineer-status-badge.active {
+    background: var(--nokia-success-light);
+    color: var(--nokia-success);
+}
+
+.engineer-status-badge.inactive {
+    background: var(--nokia-danger-light);
+    color: var(--nokia-danger);
+}
+
+/* ============================================
+   Notifications
+   ============================================ */
+.notification-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.notification-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 0.5rem;
+    background: var(--nokia-light-gray);
+    border-radius: var(--border-radius-sm);
+}
+
+.notification-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    margin-top: 0.5rem;
+    flex-shrink: 0;
+}
+
+.notification-dot.raawa { background: var(--nokia-warning); }
+.notification-dot.towerco { background: var(--nokia-info); }
+.notification-dot.requirement { background: var(--nokia-danger); }
+.notification-dot.activity { background: var(--nokia-success); }
+
+.notification-content {
+    flex: 1;
+}
+
+.notification-message {
+    font-size: 0.875rem;
+    color: var(--nokia-dark);
+    margin: 0;
+}
+
+.notification-time {
+    font-size: 0.75rem;
+    color: var(--nokia-gray);
+}
+
+.no-notifications {
+    color: var(--nokia-gray);
+    text-align: center;
+    padding: 1rem 0;
+    margin: 0;
+}
+
+/* ============================================
+   Quick Actions
+   ============================================ */
+.quick-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+}
+
+.quick-action-link {
+    padding: 0.75rem;
+    background: var(--nokia-light-gray);
+    border-radius: var(--border-radius-sm);
+    text-decoration: none;
+    color: var(--nokia-dark);
+    font-weight: 500;
+    font-size: 0.875rem;
+    text-align: center;
+    transition: all var(--transition-base);
+}
+
+.quick-action-link:hover {
+    background: var(--nokia-blue);
+    color: white;
+    transform: translateY(-2px);
+}
+
+/* ============================================
+   Buttons
+   ============================================ */
+.btn-primary {
+    background: var(--nokia-blue-gradient);
+    color: var(--nokia-white);
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: var(--border-radius-sm);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all var(--transition-base);
+    box-shadow: var(--shadow-sm);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    text-decoration: none;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-nokia);
+}
+
+.btn-primary:active {
+    transform: translateY(0);
+}
+
+.btn-secondary {
+    background: var(--nokia-teal);
+    color: var(--nokia-white);
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: var(--border-radius-sm);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all var(--transition-base);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    text-decoration: none;
+}
+
+.btn-secondary:hover {
+    background: #009B8A;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 180, 160, 0.3);
+}
+
+/* ============================================
+   Login Page
+   ============================================ */
+.login-page {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--nokia-blue-gradient);
+    padding: 2rem;
+}
+
+.login-container {
+    background: var(--nokia-white);
+    border-radius: var(--border-radius-xl);
+    padding: 3rem;
+    max-width: 450px;
+    width: 100%;
+    box-shadow: var(--shadow-xl);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.login-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.login-logo {
+    height: 60px;
+    margin-bottom: 1rem;
+}
+
+.login-header h1 {
+    color: var(--nokia-dark);
+    font-size: 1.75rem;
+    margin: 0 0 0.5rem 0;
+}
+
+.login-header p {
+    color: var(--nokia-gray);
+    margin: 0;
+}
+
+.login-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.login-form .form-group {
+    margin: 0;
+}
+
+.login-form .form-group label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: var(--nokia-dark);
+}
+
+.login-form .form-group input {
+    width: 100%;
+    padding: 0.75rem;
+    border: 2px solid var(--nokia-light-gray);
+    border-radius: var(--border-radius-sm);
+    font-size: 1rem;
+    transition: all var(--transition-base);
+}
+
+.login-form .form-group input:focus {
+    outline: none;
+    border-color: var(--nokia-blue);
+    box-shadow: 0 0 0 3px rgba(0, 90, 255, 0.1);
+}
+
+.error-message {
+    background: var(--nokia-danger-light);
+    color: var(--nokia-danger);
+    padding: 0.75rem;
+    border-radius: var(--border-radius-sm);
+    font-size: 0.9rem;
+    text-align: center;
+}
+
+.login-footer {
+    margin-top: 2rem;
+    text-align: center;
+    border-top: 1px solid var(--nokia-light-gray);
+    padding-top: 1.5rem;
+}
+
+.login-footer p {
+    color: var(--nokia-gray);
+    font-size: 0.85rem;
+    margin: 0.25rem 0;
+}
+
+.nokia-copyright {
+    font-size: 0.75rem;
+    opacity: 0.7;
+}
+
+/* ============================================
+   Site Masterlist
+   ============================================ */
+.site-masterlist {
+    padding: 2rem;
+    max-width: 1440px;
+    margin: 0 auto;
+}
+
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.page-header h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--nokia-dark);
+    margin: 0;
+}
+
+.filters {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.search-input,
+.filter-select {
+    padding: 0.75rem;
+    border: 2px solid var(--nokia-light-gray);
+    border-radius: var(--border-radius-sm);
+    font-size: 1rem;
+    transition: all var(--transition-base);
+    flex: 1;
+    min-width: 200px;
+}
+
+.search-input:focus,
+.filter-select:focus {
+    outline: none;
+    border-color: var(--nokia-blue);
+    box-shadow: 0 0 0 3px rgba(0, 90, 255, 0.1);
+}
+
+.table-container {
+    background: var(--nokia-white);
+    border-radius: var(--border-radius-md);
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+}
+
+.site-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.site-table thead {
+    background: var(--nokia-blue-light);
+    border-bottom: 2px solid var(--nokia-blue);
+}
+
+.site-table th {
+    padding: 1rem;
+    text-align: left;
+    font-weight: 700;
+    color: var(--nokia-blue-dark);
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 0.5px;
+}
+
+.site-table td {
+    padding: 1rem;
+    border-bottom: 1px solid var(--nokia-light-gray);
+}
+
+.site-table tr:hover {
+    background: var(--nokia-blue-light);
+}
+
+.btn-view {
+    background: var(--nokia-blue-light);
+    color: var(--nokia-blue);
+    padding: 0.25rem 0.75rem;
+    border-radius: var(--border-radius-sm);
+    text-decoration: none;
+    font-size: 0.875rem;
+    font-weight: 600;
+    transition: all var(--transition-base);
+}
+
+.btn-view:hover {
+    background: var(--nokia-blue);
+    color: white;
+}
+
+/* ============================================
+   About Page
+   ============================================ */
+.about-page {
+    padding: 2rem;
+    max-width: 1440px;
+    margin: 0 auto;
+}
+
+.about-header {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.about-header h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--nokia-dark);
+    margin: 1rem 0 0.5rem 0;
+}
+
+.about-header .subtitle {
+    color: var(--nokia-gray);
+    font-size: 1.1rem;
+}
+
+.about-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+}
+
+.about-card {
+    background: var(--nokia-white);
+    padding: 2rem;
+    border-radius: var(--border-radius-md);
+    box-shadow: var(--shadow-sm);
+    border-top: 4px solid var(--nokia-blue);
+    transition: all var(--transition-base);
+}
+
+.about-card:hover {
+    box-shadow: var(--shadow-nokia);
+}
+
+.about-card:nth-child(2) { border-top-color: var(--nokia-teal); }
+.about-card:nth-child(3) { border-top-color: var(--nokia-orange); }
+.about-card:nth-child(4) { border-top-color: var(--nokia-info); }
+
+.about-card h2 {
+    color: var(--nokia-blue-dark);
+    margin-top: 0;
+}
+
+.about-card ul {
+    list-style: none;
+    padding: 0;
+}
+
+.about-card ul li {
+    padding: 0.5rem 0;
+    border-bottom: 1px solid var(--nokia-light-gray);
+}
+
+.about-card ul li:last-child {
+    border-bottom: none;
+}
+
+.developer-info {
+    background: var(--nokia-blue-light);
+    padding: 2rem;
+    border-radius: var(--border-radius-md);
+    grid-column: 1 / -1;
+    text-align: center;
+    border: 2px solid var(--nokia-blue);
+}
+
+.developer-info h2 {
+    color: var(--nokia-blue-dark);
+}
+
+/* ============================================
+   Deployment
+   ============================================ */
+.actual-deployment {
+    padding: 2rem;
+    max-width: 1440px;
+    margin: 0 auto;
+}
+
+.deployment-grid {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 2rem;
+}
+
+.deployment-list {
+    background: var(--nokia-white);
+    padding: 1.5rem;
+    border-radius: var(--border-radius-md);
+    box-shadow: var(--shadow-sm);
+    max-height: 600px;
+    overflow-y: auto;
+}
+
+.deployment-list h2 {
+    font-size: 1.25rem;
+    margin: 0 0 1rem 0;
+}
+
+.deployment-item {
+    background: var(--nokia-white);
+    padding: 1rem;
+    border-radius: var(--border-radius-sm);
+    border-left: 4px solid var(--nokia-blue);
+    margin-bottom: 0.5rem;
+    cursor: pointer;
+    transition: all var(--transition-base);
+    border: 1px solid var(--nokia-light-gray);
+}
+
+.deployment-item:hover {
+    box-shadow: var(--shadow-md);
+    transform: translateX(4px);
+}
+
+.deployment-item.selected {
+    border-left-color: var(--nokia-teal);
+    background: var(--nokia-teal-light);
+}
+
+.deployment-item h3 {
+    font-size: 1rem;
+    margin: 0 0 0.25rem 0;
+}
+
+.deployment-item p {
+    font-size: 0.875rem;
+    color: var(--nokia-gray);
+    margin: 0.25rem 0;
+}
+
+.deployment-details {
+    background: var(--nokia-white);
+    padding: 1.5rem;
+    border-radius: var(--border-radius-md);
+    box-shadow: var(--shadow-sm);
+}
+
+.deployment-details h2 {
+    font-size: 1.25rem;
+    margin: 0 0 1rem 0;
+}
+
+.updates-list {
+    max-height: 300px;
+    overflow-y: auto;
+    margin-bottom: 1.5rem;
+}
+
+.update-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid var(--nokia-light-gray);
+}
+
+.update-time {
+    font-weight: 500;
+}
+
+.update-progress {
+    color: var(--nokia-blue);
+    font-weight: 600;
+}
+
+.add-update-form {
+    background: var(--nokia-light-gray);
+    padding: 1.5rem;
+    border-radius: var(--border-radius-sm);
+}
+
+.add-update-form h3 {
+    margin: 0 0 1rem 0;
+}
+
+.add-update-form .form-group {
+    margin-bottom: 1rem;
+}
+
+.add-update-form .form-group label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+}
+
+.add-update-form .form-group input {
+    width: 100%;
+    padding: 0.5rem;
+    border: 2px solid var(--nokia-light-gray);
+    border-radius: var(--border-radius-sm);
+    font-size: 1rem;
+}
+
+.add-update-form .btn-primary {
+    width: 100%;
+}
+
+/* ============================================
+   Form Elements
+   ============================================ */
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: var(--nokia-dark);
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 0.75rem;
+    border: 2px solid var(--nokia-light-gray);
+    border-radius: var(--border-radius-sm);
+    font-size: 1rem;
+    transition: all var(--transition-base);
+    font-family: inherit;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: var(--nokia-blue);
+    box-shadow: 0 0 0 3px rgba(0, 90, 255, 0.1);
+}
+
+/* ============================================
+   Loading State
+   ============================================ */
+.loading {
+    text-align: center;
+    padding: 3rem;
+    color: var(--nokia-gray);
+}
+
+/* ============================================
+   Responsive Design
+   ============================================ */
+@media (max-width: 1200px) {
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .project-overview {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 992px) {
+    .about-content {
+        grid-template-columns: 1fr;
+    }
+    
+    .deployment-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .nav-container {
+        flex-direction: column;
+        gap: 1rem;
     }
 
-    return (
-        <div className="dashboard">
-            {/* Page Title */}
-            <div className="dashboard-header">
-                <div className="header-top">
-                    <div>
-                        <h1>Project Rollout and Activity Management System</h1>
-                        <p className="header-subtitle">Real-time monitoring of all rollout activities</p>
-                    </div>
-                    <div className="header-actions">
-                        <button className="btn-secondary" onClick={fetchDashboardData}>
-                            <span className="icon-refresh">↻</span> Refresh Data
-                        </button>
-                        <Link to="/reports" className="btn-primary">
-                            <span className="icon-download">↓</span> Generate Report
-                        </Link>
-                    </div>
-                </div>
-            </div>
+    .nav-menu {
+        flex-direction: column;
+        gap: 0.5rem;
+        width: 100%;
+    }
+    
+    .nav-menu a,
+    .logout-btn {
+        width: 100%;
+        text-align: center;
+    }
 
-            {/* Main Dashboard Grid */}
-            <div className="dashboard-grid">
-                {/* Left Column */}
-                <div className="dashboard-left">
-                    {/* Recent Activity Log */}
-                    <div className="dashboard-card">
-                        <h2>Recent Activity Log</h2>
-                        <div className="activity-log">
-                            <div className="activity-item">
-                                <span className="activity-time">10:30 AM</span>
-                                <span className="activity-text">RAAWA Masterlist updated</span>
-                            </div>
-                            <div className="activity-item">
-                                <span className="activity-time">09:15 AM</span>
-                                <span className="activity-text">Site MNL-001 added</span>
-                            </div>
-                            <div className="activity-item">
-                                <span className="activity-time">08:45 AM</span>
-                                <span className="activity-text">TOWERCO Monitoring synced</span>
-                            </div>
-                            <div className="activity-item">
-                                <span className="activity-time">Yesterday</span>
-                                <span className="activity-text">RAAWA Monitoring completed</span>
-                            </div>
-                        </div>
-                    </div>
+    .header-top {
+        flex-direction: column;
+        gap: 1rem;
+    }
+    
+    .header-top h1 {
+        font-size: 1.5rem;
+    }
+    
+    .header-actions {
+        width: 100%;
+    }
+    
+    .header-actions .btn-primary,
+    .header-actions .btn-secondary {
+        flex: 1;
+        text-align: center;
+        justify-content: center;
+    }
+    
+    .stats-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+    
+    .monitoring-stats {
+        grid-template-columns: 1fr;
+    }
+    
+    .stats-grid-small {
+        grid-template-columns: 1fr;
+    }
+    
+    .quick-actions {
+        grid-template-columns: 1fr;
+    }
+    
+    .timeline-stat {
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+    
+    .dashboard {
+        padding: 1rem;
+    }
+    
+    .page-header {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: stretch;
+    }
+    
+    .filters {
+        flex-direction: column;
+    }
+    
+    .search-input,
+    .filter-select {
+        min-width: 100%;
+    }
+    
+    .site-table {
+        font-size: 0.875rem;
+    }
+    
+    .site-table th,
+    .site-table td {
+        padding: 0.5rem;
+    }
+    
+    .login-container {
+        padding: 2rem 1.5rem;
+    }
+    
+    .about-card {
+        padding: 1.5rem;
+    }
+    
+    .stat-card {
+        padding: 1rem;
+    }
+    
+    .dashboard-card {
+        padding: 1rem;
+    }
+}
 
-                    {/* RAAWA Monitoring */}
-                    <div className="dashboard-card">
-                        <h2>RAAWA Monitoring</h2>
-                        <div className="monitoring-stats">
-                            <div className="monitoring-item">
-                                <span className="monitoring-label">Expiring Today</span>
-                                <span className="monitoring-value danger">0 days</span>
-                            </div>
-                            <div className="monitoring-item">
-                                <span className="monitoring-label">Expiring This Week</span>
-                                <span className="monitoring-value warning">3 days</span>
-                            </div>
-                            <div className="monitoring-item">
-                                <span className="monitoring-label">Expiring Next Week</span>
-                                <span className="monitoring-value success">5 days</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* TOWERCO Monitoring */}
-                    <div className="dashboard-card">
-                        <h2>TOWERCO Monitoring</h2>
-                        <div className="monitoring-stats">
-                            <div className="monitoring-item">
-                                <span className="monitoring-label">Expiring Today</span>
-                                <span className="monitoring-value danger">0 days</span>
-                            </div>
-                            <div className="monitoring-item">
-                                <span className="monitoring-label">Expiring This Week</span>
-                                <span className="monitoring-value warning">3 days</span>
-                            </div>
-                            <div className="monitoring-item">
-                                <span className="monitoring-label">Expiring Next Week</span>
-                                <span className="monitoring-value success">+5 days</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Project Progress Overview with Map Legend */}
-                    <div className="dashboard-card full-width">
-                        <h2>Project Progress Overview</h2>
-                        <div className="project-overview">
-                            <div className="project-map">
-                                <div className="map-placeholder">
-                                    <div className="map-marker">📍 Site</div>
-                                    <div className="map-marker">📍 Shillongtoe</div>
-                                    <div className="map-marker">📍 Mithi Sam</div>
-                                    <div className="map-marker">📍 Phirangteo</div>
-                                    <div className="map-marker">📍 Mudimara</div>
-                                </div>
-                            </div>
-                            <div className="project-legend">
-                                <div className="legend-item">
-                                    <span className="legend-dot active"></span>
-                                    <span>Active Projects: 7</span>
-                                </div>
-                                <div className="legend-item">
-                                    <span className="legend-dot onair"></span>
-                                    <span>Sites On-Air: 245</span>
-                                </div>
-                                <div className="legend-item">
-                                    <span className="legend-dot raawa"></span>
-                                    <span>Pending RAAWA: 12</span>
-                                </div>
-                                <div className="legend-item">
-                                    <span className="legend-dot towerco"></span>
-                                    <span>Pending TOWERCO: 5</span>
-                                </div>
-                                <div className="legend-item">
-                                    <span className="legend-dot compliance"></span>
-                                    <span>Pending Compliance Documents</span>
-                                    <div className="sub-items">
-                                        <span>• Compliance Document 1</span>
-                                        <span>• Compliance Document 2</span>
-                                        <span>• Compliance Document 3</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Deployment Timeline 2024 */}
-                    <div className="dashboard-card full-width">
-                        <h2>Deployment Timeline 2024</h2>
-                        <div className="chart-container">
-                            <ResponsiveContainer width="100%" height={250}>
-                                <BarChart data={deploymentData}>
-                                    <CartesianGrid strokeDasharray="3 3" stroke="#E5E7EB" />
-                                    <XAxis dataKey="month" stroke="#6B7280" fontSize={12} />
-                                    <YAxis stroke="#6B7280" fontSize={12} domain={[0, 100]} />
-                                    <Tooltip 
-                                        contentStyle={{ 
-                                            background: '#1A1A2E', 
-                                            border: 'none', 
-                                            borderRadius: '8px',
-                                            color: '#FFFFFF'
-                                        }}
-                                    />
-                                    <Bar dataKey="progress" fill="#005AFF" radius={[4, 4, 0, 0]} />
-                                </BarChart>
-                            </ResponsiveContainer>
-                        </div>
-                        <div className="timeline-stats">
-                            <div className="timeline-stat">
-                                <span>Total Sites: 350</span>
-                                <span>Completed: 285</span>
-                                <span>In Progress: 45</span>
-                                <span>Pending: 20</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Site Activity Monitoring Table */}
-                    <div className="dashboard-card full-width">
-                        <h2>Site Activity Monitoring</h2>
-                        <div className="table-responsive">
-                            <table className="dashboard-table">
-                                <thead>
-                                    <tr>
-                                        <th>PLAID</th>
-                                        <th>Site</th>
-                                        <th>Territory</th>
-                                        <th>Status</th>
-                                        <th>Progress</th>
-                                        <th>Engineer</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>PLAID-001</td>
-                                        <td>MNL-001 - Davao Hub</td>
-                                        <td>MINDANAO</td>
-                                        <td><span className="status-badge completed">RAAWA Approved</span></td>
-                                        <td><div className="progress-bar"><div className="progress-fill" style={{width: '100%'}}>100%</div></div></td>
-                                        <td>Installation in Progress</td>
-                                    </tr>
-                                    <tr>
-                                        <td>PLAID-002</td>
-                                        <td>DVO-FTTH-05 - Matina</td>
-                                        <td>MINDANAO</td>
-                                        <td><span className="status-badge in-progress">In Progress</span></td>
-                                        <td><div className="progress-bar"><div className="progress-fill" style={{width: '75%'}}>75%</div></div></td>
-                                        <td>Installation in Progress</td>
-                                    </tr>
-                                    <tr>
-                                        <td>PLAID-003</td>
-                                        <td>CAG-SFP-12 - Macasandig</td>
-                                        <td>MINDANAO</td>
-                                        <td><span className="status-badge in-progress">In Progress</span></td>
-                                        <td><div className="progress-bar"><div className="progress-fill" style={{width: '50%'}}>50%</div></div></td>
-                                        <td>Integration Complete</td>
-                                    </tr>
-                                    <tr>
-                                        <td>PLAID-004</td>
-                                        <td>CAG-SFP-12 - Macasandig</td>
-                                        <td>MINDANAO</td>
-                                        <td><span className="status-badge completed">Completed</span></td>
-                                        <td><div className="progress-bar"><div className="progress-fill" style={{width: '100%'}}>100%</div></div></td>
-                                        <td>Integration Complete</td>
-                                    </tr>
-                                    <tr>
-                                        <td>PLAID-005</td>
-                                        <td>CAG-SFP-12 - Macasandig</td>
-                                        <td>MINDANAO</td>
-                                        <td><span className="status-badge completed">Completed</span></td>
-                                        <td><div className="progress-bar"><div className="progress-fill" style={{width: '100%'}}>100%</div></div></td>
-                                        <td>Integrated Complete</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-
-                {/* Right Column */}
-                <div className="dashboard-right">
-                    {/* Quick Stats */}
-                    <div className="stats-grid-small">
-                        <div className="stat-card-small">
-                            <div className="stat-icon-small">📊</div>
-                            <div>
-                                <h4>Total Sites</h4>
-                                <p className="stat-number-small">{stats.totalSites}</p>
-                            </div>
-                        </div>
-                        <div className="stat-card-small">
-                            <div className="stat-icon-small">📈</div>
-                            <div>
-                                <h4>Active Projects</h4>
-                                <p className="stat-number-small">{stats.activeProjects}</p>
-                            </div>
-                        </div>
-                        <div className="stat-card-small">
-                            <div className="stat-icon-small">⏳</div>
-                            <div>
-                                <h4>Pending RAAWA</h4>
-                                <p className="stat-number-small">{stats.pendingRaawa}</p>
-                            </div>
-                        </div>
-                        <div className="stat-card-small">
-                            <div className="stat-icon-small">🏗️</div>
-                            <div>
-                                <h4>Pending TOWERCO</h4>
-                                <p className="stat-number-small">{stats.pendingTowerco}</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Engineer Login Status */}
-                    <div className="dashboard-card">
-                        <h2>Engineer Login Status</h2>
-                        <div className="engineer-status-list">
-                            {engineerStatusData.map((engineer, index) => (
-                                <div key={index} className="engineer-status-item">
-                                    <div className="engineer-info">
-                                        <span className="engineer-name">{engineer.name}</span>
-                                        <span className="engineer-last-login">{engineer.lastLogin}</span>
-                                    </div>
-                                    <span className={`engineer-status-badge ${engineer.status.toLowerCase()}`}>
-                                        {engineer.status}
-                                    </span>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-
-                    {/* Notifications */}
-                    <div className="dashboard-card">
-                        <h2>Recent Notifications</h2>
-                        <div className="notification-list">
-                            {notifications.length > 0 ? (
-                                notifications.map((notification: any, index: number) => (
-                                    <div key={index} className="notification-item">
-                                        <div className={`notification-dot ${notification.type?.toLowerCase() || ''}`}></div>
-                                        <div className="notification-content">
-                                            <p className="notification-message">{notification.message}</p>
-                                            <span className="notification-time">
-                                                {new Date(notification.created_at || '').toLocaleDateString()}
-                                            </span>
-                                        </div>
-                                    </div>
-                                ))
-                            ) : (
-                                <p className="no-notifications">No new notifications</p>
-                            )}
-                        </div>
-                    </div>
-
-                    {/* Quick Actions */}
-                    <div className="dashboard-card">
-                        <h2>Quick Actions</h2>
-                        <div className="quick-actions">
-                            <Link to="/sites/add" className="quick-action-link">
-                                <span>➕ Add Site</span>
-                            </Link>
-                            <Link to="/raawa" className="quick-action-link">
-                                <span>📋 RAAWA Check</span>
-                            </Link>
-                            <Link to="/towerco" className="quick-action-link">
-                                <span>🏗️ TOWERCO Check</span>
-                            </Link>
-                            <Link to="/deployment/plan" className="quick-action-link">
-                                <span>📅 Plan Deployment</span>
-                            </Link>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    );
-};
-
-export default Dashboard;
+@media (max-width: 480px) {
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .quick-actions {
+        grid-template-columns: 1fr;
+    }
+    
+    .stat-card-small {
+        padding: 0.75rem;
+    }
+}
