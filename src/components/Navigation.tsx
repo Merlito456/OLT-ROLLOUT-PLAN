@@ -1,8 +1,7 @@
-// src/components/Navigation.tsx
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
-import logoNokia from '../../public/logo-nokia.png';
+import logoNokia from '../../public/logo-nokia.svg';  // Changed from .png to .svg
 
 const Navigation: React.FC = () => {
     const { user, logout } = useAuth();
